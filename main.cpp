@@ -4,27 +4,14 @@
 
 using namespace std;
 
-
 CLStatus f() {
-    CLStatus s(-1, 2);
-    return s;
+    return CLStatus(-1, 4);
 }
 
 int main() {
-    /*CLStatus s =f();
+    CLStatus s = f();
     if (!s.IsSuccess()) {
-        cout << "f error" << endl;
-        cout << "error code:" << s.GetErrorCode() << endl;
-    }*/
-
-    CLLogger logger;
-    CLStatus s = logger.WriteLog("this is an error", 5);
-
-    if (!s.IsSuccess()) {
-        cout << "logger error" << endl;
-    } else {
-        cout << "logger success" << endl;
+        CLLogger::WriteLogMsg("this is an error!", s.m_cErrorCode);
     }
-
     return 0;
 }

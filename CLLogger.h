@@ -10,14 +10,27 @@
 
 class CLLogger {
 public:
-    CLLogger();
-    virtual ~CLLogger();
-
+    static CLLogger* GetInstance();
+    static CLStatus WriteLogMsg(const char* pstrMsg, long ErrorCode);
     CLStatus WriteLog(const char * pstrMsg, long ErrorCode);
+    CLStatus Flush();
 
 private:
+    CLLogger();
     CLLogger(const CLLogger&);
     CLLogger& operator=(const CLLogger&);
+    virtual ~CLLogger();
+
+private:
+    static void OnProcessExit();
+
+private:
+    int m_fd;
+    static CLLogger *m_pLog;
+
+private:
+    char *m_pLogBuffer;
+    unsigned int m_nUsedBytesForBuffer;
 };
 
 
