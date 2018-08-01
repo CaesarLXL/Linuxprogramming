@@ -31,6 +31,7 @@ private:
 private:
     char *m_pLogBuffer;
     unsigned int m_nUsedBytesForBuffer;
+    bool m_bFlagForProcessExit;
 };
 
 

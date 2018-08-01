@@ -7,6 +7,7 @@
 #include <cerrno>
 #include <unistd.h>
 #include <cstdio>
+#include <cstdlib>
 #include "CLLogger.h"
 
 #define LOG_FILE_NAME "CLLogger.txt"
@@ -19,6 +20,7 @@ CLLogger::CLLogger() {
     m_fd = open(LOG_FILE_NAME, O_RDWR | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
     m_pLogBuffer = new char[BUFFER_SIZE_LOG_FILE];
     m_nUsedBytesForBuffer = 0;
+    m_bFlagForProcessExit = false;
 }
 
 CLLogger::~CLLogger() {
@@ -50,7 +52,7 @@ CLStatus CLLogger::WriteLog(const char *pstrMsg, long ErrorCode) {
     size_t total_len = len_strmsg + len_code;
 
     //msg > BUFFER_SIZE_LOG_FILE
-    if (total_len > BUFFER_SIZE_LOG_FILE) {
+    if (total_len > BUFFER_SIZE_LOG_FILE || m_bFlagForProcessExit) {
 
         if (m_fd == -1) {
             return CLStatus(-1, 0);
@@ -96,8 +98,15 @@ CLStatus CLLogger::WriteLog(const char *pstrMsg, long ErrorCode) {
 CLLogger *CLLogger::GetInstance() {
     if (m_pLog == nullptr) {
         m_pLog = new CLLogger;
+
+        if (atexit(CLLogger::OnProcessExit) != 0) {
+            if (m_pLog != nullptr) {
+                m_pLog->WriteLog("In CLLoger::GetInstance(), atexit error", errno);
+                m_pLog->Flush();
+            }
+        }
     }
-    return m_pLog;
+    return m_pLog;o
 }
 
 CLStatus CLLogger::WriteLogMsg(const char *pstrMsg, long ErrorCode) {
@@ -106,7 +115,7 @@ CLStatus CLLogger::WriteLogMsg(const char *pstrMsg, long ErrorCode) {
         return CLStatus(-1, 0);
     }
 
-    CLStatus s = pLog->WriteLog(pstrMsg, ErrorCode);
+    CLStatus s = pLog->WriteLog(pstrMsog, ErrorCode);
 
     if (!s.IsSuccess()) {
         return CLStatus(0, 0);
@@ -139,5 +148,9 @@ CLStatus CLLogger::Flush() {
 }
 
 void CLLogger::OnProcessExit() {
-
+    CLLogger *pLogger = CLLogger::GetInstance();
+    if (pLogger != nullptr) {
+        pLogger->Flush();
+        pLogger->m_bFlagForProcessExit = true;
+    }
 }
