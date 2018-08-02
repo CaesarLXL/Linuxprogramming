@@ -13,7 +13,7 @@
 class CLThread {
 public:
     CLThread();
-    ~CLThread();
+    virtual ~CLThread();
 
     CLStatus Run(void *pContext=0);
     CLStatus WaitForDeath();
@@ -21,10 +21,10 @@ public:
 private:
     static void* StartFunctionOfThread(void *pThis);
 
-private:
-    CLStatus RunThreadFunction();
+protected:
+    virtual CLStatus RunThreadFunction() = 0;
 
-private:
+protected:
     void* m_pContext;
     pthread_t m_ThreadId;
 };

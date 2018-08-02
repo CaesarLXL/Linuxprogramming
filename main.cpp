@@ -1,17 +1,15 @@
 #include <iostream>
 #include "CLStatus.h"
 #include "CLLogger.h"
+#include "CLThread.h"
+#include "CLMyThread.h"
 
 using namespace std;
 
-CLStatus f() {
-    return CLStatus(-1, 4);
-}
-
 int main() {
-    CLStatus s = f();
-    if (!s.IsSuccess()) {
-        CLLogger::WriteLogMsg("this is an error!", s.m_cErrorCode);
-    }
+    CLThread *pThread = new CLMyThread;
+    pThread->Run((void*)2);
+    pThread->WaitForDeath();
+    delete pThread;
     return 0;
 }

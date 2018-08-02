@@ -40,7 +40,3 @@ void *CLThread::StartFunctionOfThread(void *pThis) {
     return (void *)s.m_cReturnCode;
 }
 
-CLStatus CLThread::RunThreadFunction() {
-    cout <<(long)m_pContext << endl;
-    return CLStatus(0, 0);
-}
