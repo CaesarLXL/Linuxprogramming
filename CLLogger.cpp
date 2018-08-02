@@ -106,7 +106,7 @@ CLLogger *CLLogger::GetInstance() {
             }
         }
     }
-    return m_pLog;o
+    return m_pLog;
 }
 
 CLStatus CLLogger::WriteLogMsg(const char *pstrMsg, long ErrorCode) {
@@ -115,7 +115,7 @@ CLStatus CLLogger::WriteLogMsg(const char *pstrMsg, long ErrorCode) {
         return CLStatus(-1, 0);
     }
 
-    CLStatus s = pLog->WriteLog(pstrMsog, ErrorCode);
+    CLStatus s = pLog->WriteLog(pstrMsg, ErrorCode);
 
     if (!s.IsSuccess()) {
         return CLStatus(0, 0);
